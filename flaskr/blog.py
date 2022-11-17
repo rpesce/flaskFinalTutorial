@@ -20,6 +20,13 @@ def index():
     return render_template('blog/index.html', posts=posts)
 
 
+@bp.route('/<int:id>/')
+def details(id):
+    db = get_db()
+    post = get_post(id)
+    return render_template('blog/post_details.html', post=post)
+
+
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
@@ -48,7 +55,7 @@ def create():
 
 def get_post(id, check_author=True):
     post = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, u'
+        'SELECT p.id, title, body, created, author_id, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.id = ?',
         (id,)
