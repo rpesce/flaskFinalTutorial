@@ -6,18 +6,33 @@ from werkzeug.exceptions import abort
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
+import math
+
 bp = Blueprint('blog', __name__)
 
 
 @bp.route('/')
 def index():
+    # Receive two parameters ?page=1&per_page=5
+
+    # Current page
+    page = request.args.get('page', 1, type=int)
+
+    # Number of rows to fetch from the database
+    limit = request.args.get('per_page', 5, type=int)
+
+    # Number of rows to skip
+    offset = (page - 1) * limit
+
     db = get_db()
-    posts = db.execute(
+    all_posts = db.execute(
         'SELECT p.id, title, body, created, author_id, username, featured'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
+        ' LIMIT ' + str(offset) + ', ' + str(limit)
     ).fetchall()
-    return render_template('blog/index.html', posts=posts)
+
+    return render_template('blog/index.html', posts=all_posts)
 
 
 @bp.route('/<int:id>/')
