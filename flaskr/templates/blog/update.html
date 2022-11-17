@@ -11,6 +11,12 @@
       value="{{ request.form['title'] or post['title'] }}" required>
     <label for="body">Body</label>
     <textarea name="body" id="body">{{ request.form['body'] or post['body'] }}</textarea>
+
+    <label for="featured">Featured</label>
+    <input type="checkbox" name="featured" id="featured" value="{{ request.form['featured'] or post['featured'] }}">
+
+
+
     <input type="submit" value="Save">
   </form>
   <hr>
