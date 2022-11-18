@@ -112,7 +112,9 @@ def update(id):
             db.commit()
             return redirect(url_for('blog.index'))
 
-    return render_template('blog/update.html', post=post)
+    mark_checked = "checked" if post["featured"] == 1 else ""
+
+    return render_template('blog/update.html', post=post, mark_checked=mark_checked)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
